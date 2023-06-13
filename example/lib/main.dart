@@ -37,20 +37,28 @@ class _MyHomePageState extends State<MyHomePage> {
   late Uint8List bytes2;
   late File file;
   int i = 0;
+  int j = 0;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      makeB();
+      makeA();
     });
     setState(() {});
   }
 
-  Future<void> makeB() async {
-    var buf = await rootBundle.load('assets/img1_137.jpg'); //
+  Future<void> makeA() async {
+    var buf = await rootBundle.load('assets/colorwheel2.png'); // img1_137.jpg
     bytes = buf.buffer.asUint8List();
     i++;
+    setState(() {});
+  }
+
+  Future<void> makeB() async {
+    var buf = await rootBundle.load('assets/img1_137.jpg'); // img1_137.jpg
+    bytes = buf.buffer.asUint8List();
+    j++;
     setState(() {});
   }
 
@@ -58,7 +66,6 @@ class _MyHomePageState extends State<MyHomePage> {
     //  file = File((await getApplicationDocumentsDirectory()).toString());
     bytes = (await Facsimile().removeBackground(bytes))!;
 
-    i++;
     setState(() {});
   }
 
@@ -79,32 +86,48 @@ class _MyHomePageState extends State<MyHomePage> {
               Container(
                 color: Colors.green,
                 width: 900,
-                height: 700,
+                height: 600,
               ),
-              if (i == 1)
+              if (i == 1 || j == 1)
                 Image.memory(bytes)
-              else if (i == 2)
+              else if (i == 2 || j == 2)
                 Image.memory(bytes),
             ]),
             Text(
               'prrr',
-              style: Theme.of(context).textTheme.headline4,
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          if (i == 0) {
-            await makeB();
-          } else {
-            doIt();
-            setState(() {});
-          }
-        },
-        tooltip: 'Increment',
-        child: const Icon(Icons.remove_circle),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FloatingActionButton(
+            onPressed: () async {
+              if (i == 0) {
+                await makeB();
+              } else {
+                await doIt();
+                setState(() {});
+              }
+            },
+            child: const Icon(Icons.remove_circle),
+          ),
+          FloatingActionButton(
+            backgroundColor: Colors.amber,
+            onPressed: () async {
+              if (j == 0) {
+                await makeA();
+              } else {
+                await doIt();
+                setState(() {});
+              }
+            },
+            child: const Icon(Icons.remove_circle),
+          ),
+        ],
+      ),
     );
   }
 }
