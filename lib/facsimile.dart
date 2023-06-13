@@ -6,11 +6,7 @@ import 'package:image/image.dart' as img;
 class Facsimile {
   Future<Uint8List?> removeBackground(Uint8List bytes) async {
     img.Image? image = img.decodeImage(bytes);
-    print(image!.hasAlpha);
-    // img.remapColors(image, alpha: img.Channel.luminance);
-    // image = img.colorOffset(image, alpha: 100);
-    print(image!.hasAlpha);
-    image;
+  
     img.Image? transparentImage =
         await _colorTransparent(image!, 150, 150, 150);
     var newPng = img.encodePng(transparentImage!);
